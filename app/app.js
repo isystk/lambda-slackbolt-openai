@@ -1,8 +1,8 @@
 
 const { App, ExpressReceiver } = require("@slack/bolt");
 const { Configuration, OpenAIApi, ChatCompletionRequestMessageRoleEnum } = require("openai");
-
 const accessToken = process.env.SLACK_BOT_TOKEN
+const slackBotId = process.env.SLACK_BOT_ID;
 
 const expressReceiver = new ExpressReceiver({
     signingSecret: process.env.SLACK_SIGNING_SECRET ,
@@ -26,52 +26,55 @@ if (process.env.IS_LOCAL === "true") {
 // global middleware。すべての event action command の前に実行される。
 app.use(async ({ context, next }) => {
     // リトライされたイベントであればスキップすべきかどうか判断する
-    if (context.retryNum && shouldSkip(contenxt)) {
+    if (context.retryNum) {
         console.log("Retry Skip", context.retryNum);
         return;
     }
     await next();
 })
 
-app.event("app_mention", async ({ event, client, say }) => {
-    console.log("app_mention start");
+// すべてのメッセージを受け取る
+app.message(async ({ event, client, message, say }) => {
+    console.log("start");
 
     // スレッドのトップのメッセージであればthread_ts、スレッド中のメッセージであればtsを取得する。
     const threadTs = event.thread_ts ? event.thread_ts : event.ts;
     try {
-        // スレッドのメッセージを取得
+        const isMentionedBot = message.text.includes(`<@${slackBotId}>`);
+        const isDM = message.channel_type === 'im';
+        if (!isMentionedBot && !isDM) {
+            // bot宛のメンションがない場合、botのDMでない場合は何もしない
+            return
+        }
+    
+        // スレッドのメッセージをすべて取得
         const threadMessagesResponse = await client.conversations.replies({
             channel: event.channel,
             ts: threadTs,
         });
         const threadMessages = threadMessagesResponse.messages
 
-        const slackBotId = process.env.SLACK_BOT_ID;
-
         // OpenAI APIに渡すためのメッセージオブジェクトを作成する。
         const mentionMessages =
             threadMessages.map(message => {
-                // メンション付きのものだけを抽出する。ここら辺は好み。
-                if(message.text?.includes(`<@${slackBotId}>`) || message.text?.includes(`<@${message.user}>`)){
-                    const role = message.user === slackBotId ? ChatCompletionRequestMessageRoleEnum.Assistant : ChatCompletionRequestMessageRoleEnum.User
-                    return { role: role, content: message.text }
-                };
+                const role = message.user === slackBotId ? ChatCompletionRequestMessageRoleEnum.Assistant : ChatCompletionRequestMessageRoleEnum.User
+                return { role: role, content: message.text }
             }).filter(e => e) // undefinedを除く
 
         // OpenAIにリクエストします
-        const message = await callOpenai(mentionMessages);
+        const reply = await callOpenai(mentionMessages);
 
         // Slack APIを呼んで回答を送信
         await say(
             {
-                text:`<@${event.user}>\n ${message}`,
+                text:`<@${event.user}>\n ${reply}`,
                 thread_ts:　threadTs
             }
         );
 
-        console.log("app_mention success");
+        console.log("success");
     } catch (e) {
-        console.log("app_mention error", e.message);
+        console.log("error", e);
         await say(
             {
                 text:`<@${event.user}>\n 不具合が発生しました。開発者にお問い合わせください。`,

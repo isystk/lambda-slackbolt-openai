@@ -60,6 +60,25 @@ Slackアプリを作成する
 
 https://api.slack.com/apps
 
+OAuth & Permissions から Required Scope の設定
+| 設定値 | 概要 |
+|:----------------| :-------------------------------|
+| app_mentions:read | botが参加しているチャンネル内で@ChatGPTBotに直接言及したメッセージを取得する |
+| channels:history | botが参加しているパブリックチャンネルのメッセージを閲覧できる |
+| channels:join | パブリックチェンネルに参加できる |
+| chat:write | botがメッセージを書き込むことができる |
+| groups:history | botが参加しているプライベートチャンネルのメッセージを閲覧できる |
+| im:history | botが参加しているDMのメッセージを閲覧できる |
+
+Event Subscriptions から Subscribe to bot events の設定
+| 設定値 | 概要 |
+|:----------------| :-------------------------------|
+| message.im | DM内でメッセージを送った際のイベント |
+| message.groups | プライベートチャンネル内でメッセージを送った際のイベント |
+| message.channels | パブリックチャンネル内でメッセージを送った際のイベント |
+| ~~app_mention~~ | メンション付きでメッセージを送った際のイベント |
+
+
 ![Event Subscriptions](./slack_app.png "Event Subscriptions")
 ※ ローカルで動かしたい場合は、「Enable Socket Mode」を有効にしてください。
 
