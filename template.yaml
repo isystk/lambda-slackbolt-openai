@@ -27,6 +27,7 @@ Resources:
       Handler: lambda.handler
       Runtime: nodejs16.x
       Policies: AmazonDynamoDBFullAccess
+      Timeout: 30
       Layers:
         - !Ref AppLayer
       Environment:

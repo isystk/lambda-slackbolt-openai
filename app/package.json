@@ -7,19 +7,13 @@
   "author": "SAM CLI",
   "license": "MIT",
   "scripts": {
-    "start": "IS_LOCAL=true node lambda",
+    "start": "IS_LOCAL=true node local-app",
     "test": "mocha tests/unit/"
   },
-  "devDependencies": {
+  "dependencies": {
     "@slack/bolt": "^3.13.0",
-    "@types/node-fetch": "2.x",
     "@vendia/serverless-express": "^4.10.1",
     "aws-sdk": "^2.1198.0",
-    "axios": "^0.27.2",
-    "multiparty": "^4.2.3",
-    "node-fetch": "^2.6.9"
-  },
-  "dependencies": {
     "dotenv": "^16.0.3",
     "openai": "^3.2.1"
   }
