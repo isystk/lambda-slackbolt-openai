@@ -1,5 +1,5 @@
-require('dotenv').config();
-const {app} = require("./app");
+import "dotenv/config.js";
+import {app} from './app.js'
 
 // ローカル起動時に実行するコード
 (async () => {

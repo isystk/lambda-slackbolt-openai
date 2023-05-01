@@ -93,12 +93,14 @@ $ npm run start
 
 AWS にデプロイする
 ```
+# ESModuleでビルドできるようにする
+$ npm install -g esbuild 
 # ビルドを実行する（.aws-samディレクトリに生成される）
 $ sam build
 # AWSに反映する
 $ sam deploy --config-env stg
 
-# AWSから、DynamoDB、Lambda&APIGatewayを削除する
+# AWSから、Lambda&APIGatewayを削除する
 $ sam delete --stack-name lambda-slackbolt-openai --profile lambda-user
 ```
 

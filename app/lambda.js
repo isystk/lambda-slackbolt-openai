@@ -1,5 +1,5 @@
-const serverlessExpress = require('@vendia/serverless-express')
-const {app,expressReceiver} = require("./app");
+import * as serverlessExpress from '@vendia/serverless-express'
+import {app, expressReceiver} from './app.js'
 
 // 初回はURL Verification（サーバの存在確認用）のリクエストがきますので、それに対応するコード
 // See. https://api.slack.com/apis/connections/events-api#the-events-api__subscribing-to-event-types__events-api-request-urls__request-url-configuration--verification

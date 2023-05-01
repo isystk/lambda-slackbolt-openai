@@ -1,6 +1,6 @@
-
-const { App, ExpressReceiver } = require("@slack/bolt");
-const { Configuration, OpenAIApi, ChatCompletionRequestMessageRoleEnum } = require("openai");
+import Bolt from "@slack/bolt";
+const { App, ExpressReceiver } = Bolt
+import { Configuration, OpenAIApi, ChatCompletionRequestMessageRoleEnum } from "openai";
 const accessToken = process.env.SLACK_BOT_TOKEN
 const slackBotId = process.env.SLACK_BOT_ID;
 
@@ -108,7 +108,7 @@ const callOpenai = async (mentionMessages) => {
     return message
 }
 
-module.exports = {
+export {
     app,
     expressReceiver
 }
