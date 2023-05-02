@@ -23,13 +23,20 @@ AWS-Lambdaで動作しています。SAMを利用して自動デプロイ可能�
 .
 ├── README.md
 ├── app (Lambdaのモジュール)
-│   ├── lambda.js
+│   ├── dist
+│   ├── jest.config.ts
+│   ├── node_modules
 │   ├── package-lock.json
 │   ├── package.json
-│   └── tests
+│   ├── src
+│   ├── tests
+│   └── tsconfig.json
 ├── layers (共通モジュール)
 │   └── app-layer
 ├── samconfig.toml
+├── task
+│   ├── env.json
+│   └── env.json.example
 └── template.yaml
 ```
 

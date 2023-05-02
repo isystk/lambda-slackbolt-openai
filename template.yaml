@@ -6,6 +6,11 @@ Description: >
   SAM Template for lambda-slackbolt-openai that has the DynamoDB table and Lambda
   functions needed to demonstrate the Websocket protocol on API Gateway.
 
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 60
+    
 Parameters:
   # パラメータ：アプリ名
   AppName:
@@ -26,7 +31,8 @@ Resources:
       CodeUri: app/
       Handler: lambda.handler
       Runtime: nodejs16.x
-      Timeout: 30
+      Architectures:
+        - x86_64
       Layers:
         - !Ref AppLayer
       Environment:
@@ -50,7 +56,7 @@ Resources:
         Target: "es2020"
         Sourcemap: true
         EntryPoints:
-          - lambda.js
+          - src/lambda.ts
 
   # Layer(共通処理)
   AppLayer:
